@@ -1,13 +1,7 @@
 from fastapi import FastAPI
-from sqlalchemy import create_engine
+from settings import engine
 from db_models import Base
-from views import index
-
-SQLALCHEMY_DATABASE_URL = "sqlite:///./sql_app.db"
-
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-)
+from views import current_status, change_status
 
 Base.metadata.create_all(bind=engine)
 
@@ -15,5 +9,10 @@ app = FastAPI()
 
 
 @app.get("/")
-async def root():
-    return index()
+async def get_status():
+    return current_status()
+
+
+@app.post("/")
+async def test_change_status():
+    return change_status()
